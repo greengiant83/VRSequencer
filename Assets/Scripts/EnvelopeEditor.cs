@@ -13,6 +13,7 @@ public class EnvelopeEditor : MonoBehaviour
 
     void Start()
     {
+        MeshFilter.transform.localScale = Vector3.one;
         mesh = Instantiate(MeshFilter.sharedMesh);
         MeshFilter.sharedMesh = mesh;
         verts = mesh.vertices;
