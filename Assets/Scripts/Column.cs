@@ -11,6 +11,12 @@ public class Column : MonoBehaviour
 
     private Vector3 size;
     private SensorBlock[] cells;
+    private Material material;
+
+    public void SetMaterial(Material Material)
+    {
+        this.material = Material;
+    }
 
     public void SetSize(Vector3 Size)
     {
@@ -48,6 +54,7 @@ public class Column : MonoBehaviour
             var cell = Instantiate(SensorBlockPrefab).GetComponent<SensorBlock>();
             cell.transform.SetParent(this.transform, false);
             cell.SetData(activeCells[i]);
+            cell.SetMaterial(material);
             cells[i] = cell;
         }
 

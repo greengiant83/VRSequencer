@@ -21,29 +21,10 @@ public class InputGrid : MonoBehaviour
     public static int RowCount = 12;
     public static int ColCount = 4;
 
-    public static void Show(Sequencer Source)
-    {
-        instance.SetSource(Source);
-    }
-
     private void Start()
     {
         instance = this;
         generateTiles(RowCount, ColCount);
-    }
-
-    private void Update()
-    {
-        if(source != null && source.IsMoving) moveToSource();
-    }
-
-    private void moveToSource()
-    {
-        if (source == null) return;
-
-        var sourceSize = source.GetSize();
-        transform.rotation = source.transform.rotation;
-        transform.position = source.transform.position + source.transform.forward * -(sourceSize.z / 2) + Vector3.down * (sourceSize.y / 2 + size.y);
     }
 
     public void SetSource(Sequencer Source)
@@ -58,8 +39,6 @@ public class InputGrid : MonoBehaviour
                 tile.IsOn = source.Data.Columns[col].Cells[row].Value;
             }
         }
-
-        moveToSource();
     }
 
     private void generateTiles(int rows, int cols)

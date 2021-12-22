@@ -9,11 +9,15 @@ public class Sequencer : ButtonInteractable
     [SerializeField] private Transform ColumnContainer;
     [SerializeField] private GameObject ColumnPrefab;
     [SerializeField] private BoxCollider Collider;
+    [SerializeField] private Material BlockMaterialReference;
 
     public bool IsSpawning;
     public DataGrid Data { get; private set; }
+    public float VolumeLow { get; private set; } = 0.0f;
+    public float VolumeHigh { get; private set; } = 1.0f;
 
     public bool IsMoving => (IsSpawning || grabAndSize.IsGrabbing);
+    public Material BlockMaterial { get; private set; }
 
     private GrabAndSize grabAndSize;
     private Column[] columns;
@@ -22,7 +26,9 @@ public class Sequencer : ButtonInteractable
     protected override void Awake()
     {
         base.Awake();
-    
+
+        BlockMaterial = Instantiate(BlockMaterialReference);
+        SetVolumeEnvelope(VolumeLow, VolumeHigh);
         size = transform.localScale;
         initializeDataGrid(InputGrid.RowCount, InputGrid.ColCount);
         createLayout();
@@ -70,7 +76,7 @@ public class Sequencer : ButtonInteractable
 
     public void Select()
     {
-        InputGrid.Show(this);
+        SequencerControlPanel.Instance.Show(this);
     }
 
     public Vector3 GetSize()
@@ -88,6 +94,14 @@ public class Sequencer : ButtonInteractable
     public void DataUpdated()
     {
         createLayout();
+    }
+
+    public void SetVolumeEnvelope(float LowValue, float HighValue)
+    {
+        this.VolumeLow = LowValue;
+        this.VolumeHigh = HighValue;
+        BlockMaterial.SetFloat("_VolumeLow", LowValue);
+        BlockMaterial.SetFloat("_VolumeHigh", HighValue);
     }
 
     private void createLayout()
@@ -113,6 +127,7 @@ public class Sequencer : ButtonInteractable
         {
             var column = Instantiate(ColumnPrefab).GetComponent<Column>();
             column.transform.SetParent(ColumnContainer, false);
+            column.SetMaterial(BlockMaterial);
             column.SetData(activeDataColumns[i]);
             columns[i] = column;
         }

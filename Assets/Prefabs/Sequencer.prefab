@@ -211,6 +211,7 @@ MonoBehaviour:
   ColumnContainer: {fileID: 750216081009167883}
   ColumnPrefab: {fileID: 4023546036383543500, guid: fb1f984089891c64ea48386d19dc4064, type: 3}
   Collider: {fileID: 788220614384995013}
+  BlockMaterialReference: {fileID: 2100000, guid: 983addcc9fcdbdf44b21231fdce75a81, type: 2}
   IsSpawning: 0
 --- !u!114 &4902442973584968596
 MonoBehaviour:

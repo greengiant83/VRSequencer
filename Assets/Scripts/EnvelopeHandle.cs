@@ -5,28 +5,32 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class EnvelopeHandle : XRBaseInteractable
 {
+    [SerializeField] private EnvelopeEditor ParentEditor;
     [SerializeField] private Transform UpperHandle;
     [SerializeField] private Transform LowerHandle;
     private Vector3 interactorPoint;
-    private bool isGrabbing;
     private IXRInteractor interactor;
+
+    public bool IsGrabbing { get; private set; }
 
     private void Update()
     {
-        if(isGrabbing)
+        if(IsGrabbing)
         {
             var position = interactor.transform.TransformPoint(interactorPoint);
             position = transform.parent.InverseTransformPoint(position);
-            var y = position.y;
+            var z = position.z;
             
             if (UpperHandle != null)
-                y = Mathf.Min(UpperHandle.localPosition.y, y);
+                z = Mathf.Min(UpperHandle.localPosition.z, z);
             else if (LowerHandle != null)
-                y = Mathf.Max(LowerHandle.localPosition.y, y);
-            y = Mathf.Clamp(y, -0.5f, 0.5f);
+                z = Mathf.Max(LowerHandle.localPosition.z, z);
+
+            var range = ParentEditor.GetHandleRange();
+            z = Mathf.Clamp(z, -range, range);
 
             position = transform.localPosition;
-            position.y = y;
+            position.z = z;
             transform.localPosition = position;
         }
     }
@@ -36,13 +40,13 @@ public class EnvelopeHandle : XRBaseInteractable
         base.OnSelectEntering(args);
         interactor = args.interactorObject;
         interactorPoint = interactor.transform.InverseTransformPoint(transform.position);
-        isGrabbing = true;
+        IsGrabbing = true;
     }
 
     protected override void OnSelectExiting(SelectExitEventArgs args)
     {
         base.OnSelectExiting(args);
         interactor = null;
-        isGrabbing = false;
+        IsGrabbing = false;
     }
 }
