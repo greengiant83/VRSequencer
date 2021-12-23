@@ -6,6 +6,8 @@ public class SequencerControlPanel : MonoBehaviour
 {
     public static SequencerControlPanel Instance { get; private set; }
 
+    [SerializeField] private AudioHelm.HelmController AudioController;
+
     [SerializeField] private InputGrid InputGrid;
     [SerializeField] private EnvelopeEditor EnvelopeEditor;
     [SerializeField] private Transform PanelSizeReference;
@@ -17,6 +19,12 @@ public class SequencerControlPanel : MonoBehaviour
     {
         Instance = this;
         BendDial.ValueChanged += BendDial_ValueChanged;
+        InvokeRepeating("Tick", 0, 0.2f);
+    }
+
+    private void Tick()
+    {
+        AudioController.NoteOn(Random.Range(70, 100), 1.0f, 0.1f);
     }
 
     private void OnDestroy()
@@ -26,7 +34,6 @@ public class SequencerControlPanel : MonoBehaviour
 
     private void BendDial_ValueChanged()
     {
-        Debug.Log("Bend window set to: " + BendDial.Value);
         source.BendWindow = BendDial.Value;
     }
 
@@ -43,7 +50,6 @@ public class SequencerControlPanel : MonoBehaviour
         InputGrid.SetSource(source);
         EnvelopeEditor.SetSource(source);
         BendDial.Value = source.BendWindow;
-        Debug.Log("Setting dial to " + source.BendWindow);
         movePanelToSequencer();
     }
 
