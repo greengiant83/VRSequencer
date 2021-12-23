@@ -15,6 +15,7 @@ public class Sequencer : ButtonInteractable
     public DataGrid Data { get; private set; }
     public float VolumeLow { get; private set; } = 0.0f;
     public float VolumeHigh { get; private set; } = 1.0f;
+    public float BendWindow { get; set; }
 
     public bool IsMoving => (IsSpawning || grabAndSize.IsGrabbing);
     public Material BlockMaterial { get; private set; }

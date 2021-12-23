@@ -108,6 +108,24 @@ public static class Extensions
         return vector;
     }
 
+    public static Vector3 ChangeX(this Vector3 vector, float value)
+    {
+        vector.x = value;
+        return vector;
+    }
+
+    public static Vector3 ChangeY(this Vector3 vector, float value)
+    {
+        vector.y = value;
+        return vector;
+    }
+
+    public static Vector3 ChangeZ(this Vector3 vector, float value)
+    {
+        vector.z = value;
+        return vector;
+    }
+
     public static Vector3 Scale(this Vector3 vector, float x, float y, float z)
     {
         vector.x *= x;

@@ -9,12 +9,25 @@ public class SequencerControlPanel : MonoBehaviour
     [SerializeField] private InputGrid InputGrid;
     [SerializeField] private EnvelopeEditor EnvelopeEditor;
     [SerializeField] private Transform PanelSizeReference;
+    [SerializeField] private DialInteractable BendDial;
 
     private Sequencer source;
     
     private void Start()
     {
         Instance = this;
+        BendDial.ValueChanged += BendDial_ValueChanged;
+    }
+
+    private void OnDestroy()
+    {
+        BendDial.ValueChanged -= BendDial_ValueChanged;
+    }
+
+    private void BendDial_ValueChanged()
+    {
+        Debug.Log("Bend window set to: " + BendDial.Value);
+        source.BendWindow = BendDial.Value;
     }
 
     private void Update()
@@ -29,6 +42,8 @@ public class SequencerControlPanel : MonoBehaviour
         source = Sequencer;
         InputGrid.SetSource(source);
         EnvelopeEditor.SetSource(source);
+        BendDial.Value = source.BendWindow;
+        Debug.Log("Setting dial to " + source.BendWindow);
         movePanelToSequencer();
     }
 
