@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using System.Linq;
+using AudioHelm;
 
 public class Sequencer : ButtonInteractable
 {
@@ -23,11 +24,13 @@ public class Sequencer : ButtonInteractable
     private GrabAndSize grabAndSize;
     private Column[] columns;
     private Vector3 size;
+    private HelmController audioController;
 
     protected override void Awake()
     {
         base.Awake();
 
+        audioController = FindObjectOfType<HelmController>();
         BlockMaterial = Instantiate(BlockMaterialReference);
         SetVolumeEnvelope(VolumeLow, VolumeHigh);
         size = transform.localScale;
@@ -97,6 +100,18 @@ public class Sequencer : ButtonInteractable
         createLayout();
     }
 
+    public void SensedItemEnter(DataCell cell, Vector3 position)
+    {
+        if (cell.Index < 0) return;
+        audioController.NoteOn(cell.Index + 50, 1.0f);
+    }
+
+    public void SensedItemExit(DataCell cell)
+    {
+        if (cell.Index < 0) return;
+        audioController.NoteOff(cell.Index + 50);
+    }
+
     public void SetVolumeEnvelope(float LowValue, float HighValue)
     {
         this.VolumeLow = LowValue;
@@ -128,6 +143,7 @@ public class Sequencer : ButtonInteractable
         {
             var column = Instantiate(ColumnPrefab).GetComponent<Column>();
             column.transform.SetParent(ColumnContainer, false);
+            column.ParentSequencer = this;
             column.SetMaterial(BlockMaterial);
             column.SetData(activeDataColumns[i]);
             columns[i] = column;

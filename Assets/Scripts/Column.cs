@@ -8,6 +8,7 @@ public class Column : MonoBehaviour
     [SerializeField] private GameObject SensorBlockPrefab;
 
     public DataColumn Data { get; private set; }
+    public Sequencer ParentSequencer { get; set; }
 
     private Vector3 size;
     private SensorBlock[] cells;
@@ -53,6 +54,7 @@ public class Column : MonoBehaviour
         {
             var cell = Instantiate(SensorBlockPrefab).GetComponent<SensorBlock>();
             cell.transform.SetParent(this.transform, false);
+            cell.ParentSequencer = ParentSequencer;
             cell.SetData(activeCells[i]);
             cell.SetMaterial(material);
             cells[i] = cell;
